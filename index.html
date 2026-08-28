@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi Biblioteca</title>
+
+    <!-- Manifest de la PWA -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Color de la aplicación -->
+    <meta name="theme-color" content="#2c3e50">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f7;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #d5d8dc;
+        }
+
+        .contenedor {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .formulario {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .formulario h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .grupo {
+            margin-bottom: 15px;
+        }
+
+        .grupo label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .grupo input,
+        .grupo select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .boton-agregar {
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .boton-agregar:hover {
+            background-color: #219150;
+        }
+
+        .buscar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .buscar input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .libros {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .libro {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .libro h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .libro p {
+            margin: 7px 0;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .leido {
+            background-color: #d5f5e3;
+            color: #196f3d;
+        }
+
+        .pendiente {
+            background-color: #fdebd0;
+            color: #935116;
+        }
+
+        .botones {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .boton-eliminar {
+            flex: 1;
+            padding: 9px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton-leido {
+            flex: 1;
+            padding: 9px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sin-libros {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            background-color: #2c3e50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>📚 Mi Biblioteca</h1>
+        <p>Organiza y administra tus libros</p>
+    </header>
+
+    <main class="contenedor">
+
+        <!-- Formulario -->
+        <section class="formulario">
+
+            <h2>Agregar un libro</h2>
+
+            <form id="formularioLibro">
+
+                <div class="grupo">
+                    <label for="titulo">Título del libro</label>
+                    <input
+                        type="text"
+                        id="titulo"
+                        placeholder="Ej: Cien años de soledad"
+                        required
+                    >
+                </div>
+
+                <div class="grupo">
+                    <label for="autor">Autor</label>
+                    <input
+                        type="text"
+                        id="autor"
+                        placeholder="Ej: Gabriel García Márquez"
+                        required
+                    >
+                </div>
+
+                <div class="grupo">
+                    <label for="genero">Género</label>
+
+                    <select id="genero" required>
+                        <option value="">Seleccione un género</option>
+                        <option value="Novela">Novela</option>
+                        <option value="Ciencia ficción">Ciencia ficción</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Historia">Historia</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="estado">Estado</label>
+
+                    <select id="estado" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Leído">Leído</option>
+                    </select>
+                </div>
+
+                <button class="boton-agregar" type="submit">
+                    Agregar libro
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- Buscador -->
+        <section class="buscar">
+
+            <input
+                type="text"
+                id="buscar"
+                placeholder="🔎 Buscar por título o autor..."
+            >
+
+        </section>
+
+        <!-- Lista de libros -->
+        <section>
+
+            <div id="listaLibros" class="libros"></div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Mi Biblioteca - PWA</p>
+    </footer>
+
+
+    <script>
+
+        // Obtener elementos del HTML
+        const formulario = document.getElementById("formularioLibro");
+        const listaLibros = document.getElementById("listaLibros");
+        const buscar = document.getElementById("buscar");
+
+        // Obtener libros guardados
+        let libros = JSON.parse(localStorage.getItem("libros")) || [];
+
+
+        // Mostrar libros cuando se abre la aplicación
+        mostrarLibros();
+
+
+        // Agregar un nuevo libro
+        formulario.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const titulo = document.getElementById("titulo").value;
+            const autor = document.getElementById("autor").value;
+            const genero = document.getElementById("genero").value;
+            const estado = document.getElementById("estado").value;
+
+            const libro = {
+                id: Date.now(),
+                titulo: titulo,
+                autor: autor,
+                genero: genero,
+                estado: estado
+            };
+
+            libros.push(libro);
+
+            guardarLibros();
+
+            formulario.reset();
+
+            mostrarLibros();
+        });
+
+
+        // Guardar libros en LocalStorage
+        function guardarLibros() {
+
+            localStorage.setItem("libros", JSON.stringify(libros));
+
+        }
+
+
+        // Mostrar los libros
+        function mostrarLibros(lista = libros) {
+
+            listaLibros.innerHTML = "";
+
+            if (lista.length === 0) {
+
+                listaLibros.innerHTML = `
+                    <div class="sin-libros">
+                        <h3>No hay libros registrados</h3>
+                        <p>Agrega tu primer libro para comenzar.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            lista.forEach(function(libro) {
+
+                const tarjeta = document.createElement("div");
+
+                tarjeta.classList.add("libro");
+
+                tarjeta.innerHTML = `
+
+                    <h3>${libro.titulo}</h3>
+
+                    <p>
+                        <strong>Autor:</strong>
+                        ${libro.autor}
+                    </p>
+
+                    <p>
+                        <strong>Género:</strong>
+                        ${libro.genero}
+                    </p>
+
+                    <span class="estado ${
+                        libro.estado === "Leído"
+                        ? "leido"
+                        : "pendiente"
+                    }">
+                        ${libro.estado}
+                    </span>
+
+                    <div class="botones">
+
+                        <button
+                            class="boton-leido"
+                            onclick="cambiarEstado(${libro.id})">
+                            Cambiar estado
+                        </button>
+
+                        <button
+                            class="boton-eliminar"
+                            onclick="eliminarLibro(${libro.id})">
+                            Eliminar
+                        </button>
+
+                    </div>
+                `;
+
+                listaLibros.appendChild(tarjeta);
+
+            });
+
+        }
+
+
+        // Eliminar libro
+        function eliminarLibro(id) {
+
+            libros = libros.filter(function(libro) {
+
+                return libro.id !== id;
+
+            });
+
+            guardarLibros();
+
+            mostrarLibros();
+        }
+
+
+        // Cambiar estado del libro
+        function cambiarEstado(id) {
+
+            libros.forEach(function(libro) {
+
+                if (libro.id === id) {
+
+                    if (libro.estado === "Leído") {
+                        libro.estado = "Pendiente";
+                    } else {
+                        libro.estado = "Leído";
+                    }
+
+                }
+
+            });
+
+            guardarLibros();
+
+            mostrarLibros();
+        }
+
+
+        // Buscar libros
+        buscar.addEventListener("input", function() {
+
+            const texto = buscar.value.toLowerCase();
+
+            const resultados = libros.filter(function(libro) {
+
+                return (
+                    libro.titulo.toLowerCase().includes(texto) ||
+                    libro.autor.toLowerCase().includes(texto)
+                );
+
+            });
+
+            mostrarLibros(resultados);
+
+        });
+
+
+        // Registrar Service Worker
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener("load", function() {
+
+                navigator.serviceWorker
+                    .register("sw.js")
+                    .then(function() {
+
+                        console.log(
+                            "Service Worker registrado correctamente"
+                        );
+
+                    })
+                    .catch(function(error) {
+
+                        console.log(
+                            "Error al registrar Service Worker:",
+                            error
+                        );
+
+                    });
+
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
