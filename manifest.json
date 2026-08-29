@@ -1,0 +1,20 @@
+{
+    "name": "Mi Biblioteca",
+    "short_name": "Biblioteca",
+    "description": "Aplicación PWA para administrar y organizar libros",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#f4f6f7",
+    "theme_color": "#2c3e50",
+    "orientation": "portrait",
+
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
